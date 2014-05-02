@@ -1,0 +1,15 @@
+# Project/Eclipse related
+.settings/
+.project
+.metadata
+.svn/
+*.log
+github.html
+
+# OS specific files
+.DS_Store
+.DS_Store?
+.Trashes
+ehthumbs.db
+Thumbs.db
+

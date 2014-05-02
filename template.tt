@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Github Portfolio</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+[% FOREACH repo IN repos.keys %]
+
+[%# start a new row at 0,4,8,... %]
+[% UNLESS loop.index % 4 %]
+<div class="row">
+[% END %]
+<div class="col-md-3">
+	<div class="well single-repo">
+		<p><strong>[% repos.$repo.name %]</strong></p>
+		<p>[% repos.$repo.description %]</p>
+		<p><i class="fa fa-code" title="Language"></i> [% repos.$repo.language %]</p>
+		<p>[% repos.$repo.watchers %] <i class="fa fa-eye" title="watchers"></i> - [% repos.$repo.stars %] <i class="fa fa-star" title="stars"></i> - [% repos.$repo.forks %] <i class="fa fa-code-fork" title="forks"></i></p>
+		<p><i class="fa fa-github" title="Repository URL"></i> <a href="[% repos.$repo.url %]">[% repos.$repo.name %]</a></p>
+	</div> <!-- well end -->
+</div> <!-- column end -->
+[%# end the current row after each 3 repos %]
+[% UNLESS loop.count % 4 %]
+</div> <!-- row end -->
+[% END %]
+[% END %]
+
+[%# this is required to end the row if there are not enough repos to fill the last row %]
+[% IF repos.keys.size % 4 %]
+</div> <!-- row end -->
+[% END %]
+</div><!-- fluid container end -->
+
+<small>generated using <a href="https://github.com/nordicway/repofolio">repofolio</a></small>
+</body>
+</html>
