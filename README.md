@@ -11,6 +11,7 @@ An output sample can be found here:
 ## Features
 
 - automatically fetches repository information using Github API
+- sort your repos by their properties (eg. number of forks)
 - skip repositories you don't want to include
 - manually add repositories which are not on GitHub
 - cross-platform support. Runs on Windows with Strawberry Perl and should run
@@ -83,17 +84,64 @@ This allows you to add repositories from anywhere. Let's say you have a repo
     [bitbucket-project]
     name = My Project
     description = lorem ipsum
-    url = https://bitbucket.org/username/myproject
+    html_url = https://bitbucket.org/username/myproject
+
+
+### Sort repositories
+
+Repositories can be sorted based on a configured behaviour. You may set the
+ sort criteria and the sort order (ascending or descending).
+ 
+If you choose not to set a sorting behaviour, it will **default to sorting
+ by stargazers descending**.
+
+**Sort criteria**
+
+`sort_criteria` is the repo property to use for sorting. This can be
+ anything from the Github API like ***forks***, ***watchers*** or even
+ properties with alphanumeric content like ***created_at*** which allow you
+ to sort repositories by date.
+ 
+**Sort order**
+
+Sort order is ***descending by default*** but you may set `sort_ascending`
+ to ***1*** to enable ascending order.
+ 
+Let's say you want to sort repositories by date of creation with an
+ ascending order so that the oldest repos come first. The config file would
+ have to look like this:
+ 
+    sort_criteria = created_at
+    sort_ascending = 1
+
+**Customized sort sequence (manual mode)**
+
+It is also possible to sort repositories manually. This is a special case that
+ takes some time to configure, especially if you have a lot of repositories to
+ sort.
+
+To enable manual sorting, change `sort_criteria` to ***manual***.
+ 
+Let's assume that we want **first-repo** to show up before **second-repo**.
+ The config file would need to look like this:
+ 
+    sort_criteria = manual
+    
+    [first-repo]
+    order = 1
+    
+    [second-repo]
+    order = 2
 
 
 ## Tweak HTML output
 
-*repofolio* uses Template Toolkit, so you may change the template file
- `template.tt` to your liking.
+*repofolio* uses Template Toolkit, so you may change the template files
+ to your liking.
  
- If you plan to *include()* the resulting HTML file, you can go ahead and
- remove all of the boilerplate before `FOREACH`. This is where the actual
- repository loop starts.
+ If you plan to *include()* the resulting file within your own HTML, you can
+ go ahead and remove all of the boilerplate before `FOREACH`. This is where
+ the actual repository loop starts.
  
  The Template Toolkit docs can be found here:
  http://template-toolkit.org/docs/

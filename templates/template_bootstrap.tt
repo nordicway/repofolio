@@ -12,7 +12,7 @@
 <body>
 
 <div class="container-fluid">
-[% FOREACH repo IN repos.keys %]
+[% FOREACH repo IN repos %]
 
 [%# start a new row at 0,4,8,... %]
 [% UNLESS loop.index % 4 %]
@@ -20,21 +20,21 @@
 [% END %]
 <div class="col-md-3">
 	<div class="well single-repo">
-		<p><strong>[% repos.$repo.name %]</strong></p>
-		<p>[% repos.$repo.description %]</p>
-		<p><i class="fa fa-code" title="Language"></i> [% repos.$repo.language %]</p>
-		<p>[% repos.$repo.watchers %] <i class="fa fa-eye" title="watchers"></i> - [% repos.$repo.stars %] <i class="fa fa-star" title="stars"></i> - [% repos.$repo.forks %] <i class="fa fa-code-fork" title="forks"></i></p>
-		<p><i class="fa fa-github" title="Repository URL"></i> <a href="[% repos.$repo.url %]">[% repos.$repo.name %]</a></p>
+		<p><strong>[% repo.name %]</strong></p>
+		<p>[% repo.description %]</p>
+		<p><i class="fa fa-code" title="Language"></i> [% repo.language %]</p>
+		<p>[% repo.watchers %] <i class="fa fa-eye" title="watchers"></i> - [% repo.stars %] <i class="fa fa-star" title="stars"></i> - [% repo.forks %] <i class="fa fa-code-fork" title="forks"></i></p>
+		<p><i class="fa fa-github" title="Repository URL"></i> <a href="[% repo.html_url %]">[% repo.name %]</a></p>
 	</div> <!-- well end -->
 </div> <!-- column end -->
-[%# end the current row after each 3 repos %]
+[%# end the current row after each 4 repos %]
 [% UNLESS loop.count % 4 %]
 </div> <!-- row end -->
 [% END %]
 [% END %]
 
 [%# this is required to end the row if there are not enough repos to fill the last row %]
-[% IF repos.keys.size % 4 %]
+[% IF repos.size % 4 %]
 </div> <!-- row end -->
 [% END %]
 </div><!-- fluid container end -->

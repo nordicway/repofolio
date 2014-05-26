@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Github Portfolio</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: rgb(241,241,241)">
+
+<h1 style="text-align: center">github.com/[% username %]</h1>
+
+<div class="container">
+[% FOREACH repo IN repos %]
+
+<div class="row">
+<div class="col-md-6">
+	<img src="images/[% repo.name %].png" style="max-width: 100%"/>
+</div>
+<div class="col-md-6">
+	<div class="single-repo">
+		<h1>[% repo.name %]</h1>
+		<p>[% repo.description %]</p>
+		<p><i class="fa fa-code" title="Language"></i> [% repo.language %]</p>
+		<p>[% repo.watchers %] <i class="fa fa-eye" title="watchers"></i> - [% repo.stars %] <i class="fa fa-star" title="stars"></i> - [% repo.forks %] <i class="fa fa-code-fork" title="forks"></i></p>
+		<p><i class="fa fa-github" title="Repository URL"></i> <a href="[% repo.html_url %]">[% repo.name %]</a></p>
+	</div> <!-- repo end -->
+</div> <!-- column end -->
+</div> <!-- row end -->
+[% END %]
+
+</div><!-- container end -->
+
+<small>generated using <a href="https://github.com/nordicway/repofolio">repofolio</a></small>
+</body>
+</html>
