@@ -7,6 +7,13 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<style type="text/css">
+	.row {
+		margin-top: 3em;
+		margin-bottom: 3em;
+	}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </head>
 <body style="background-color: rgb(241,241,241)">
@@ -14,18 +21,21 @@
 <h1 style="text-align: center">github.com/[% username %]</h1>
 
 <div class="container">
+[%# set date format. For other formats and locales, see http://www.template-toolkit.org/docs/modules/Template/Plugin/Date.html %]
+[% USE date(format = '%m/%Y') %]
 [% FOREACH repo IN repos %]
 
 <div class="row">
 <div class="col-md-6">
-	<img src="images/[% repo.name %].png" style="max-width: 100%"/>
+	<img src="images/[% repo.name %].png" alt="[% repo.name %]" style="max-width: 100%"/>
 </div>
 <div class="col-md-6">
 	<div class="single-repo">
 		<h1>[% repo.name %]</h1>
 		<p>[% repo.description %]</p>
-		<p><i class="fa fa-code" title="Language"></i> [% repo.language %]</p>
 		<p>[% repo.watchers %] <i class="fa fa-eye" title="watchers"></i> - [% repo.stars %] <i class="fa fa-star" title="stars"></i> - [% repo.forks %] <i class="fa fa-code-fork" title="forks"></i></p>
+		<p><i class="fa fa-code" title="Language"></i> [% repo.language %]</p>
+		<p><i class="fa fa-calendar" title="Date"></i> [% date.format(repo.created_at) %] - [% date.format(repo.updated_at) %]</p>
 		<p><i class="fa fa-github" title="Repository URL"></i> <a href="[% repo.html_url %]">[% repo.name %]</a></p>
 	</div> <!-- repo end -->
 </div> <!-- column end -->

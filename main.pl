@@ -69,8 +69,12 @@ $result->auto_pagination(1);
     		next;
     	}
     	
+    	#get repo information from API and add them to the existing entries
+    	#from config.ini .
     	my %repo = get_repo($row);
-    	$repos->{ $row->{name} } = \%repo;
+    	foreach my $key(keys %repo) {
+    		$repos->{ $row->{name} }->{$key} = %repo->{$key};
+    	}
     }
 
 sort_repos();
@@ -84,6 +88,7 @@ sub load {
 	$username = $read->{_}->{username};
 	$sort_criteria = $read->{_}->{sort_criteria} || "stars";
 	if ($sort_criteria eq "manual") {
+		#enforce sort order to be ascending when sorting manually
 		$sort_ascending = 1;
 	} else {
 		$sort_ascending = $read->{_}->{sort_ascending} || 0;
@@ -107,16 +112,14 @@ sub get_repo {
 	my $row = shift;
 	my $name = $row->{name};
 
-	#this is for backward compatibility
+	#fill with attributes that cannot be taken from API.
+	#this is mainly for backward compatibility (eg. stars) and internal logic
+	#(manual order).
 	my %repo = (
 			manual => existing_or_new($name, 'order', ( $row->{order} || LONG_MAX ) ),
-    		name => existing_or_new($name, 'name', $row->{name}),
-    		description => existing_or_new($name, 'description', $row->{description}),
     		stars => existing_or_new($name, 'stargazers_count', $row->{stargazers_count}),
     		watchers => existing_or_new($name, 'watchers_count', $row->{watchers_count}),
-    		forks => existing_or_new($name, 'forks_count', $row->{forks_count}),
-    		language => existing_or_new($name, 'language', $row->{language}),
-    		html_url => existing_or_new($name, 'html_url', $row->{html_url})
+    		forks => existing_or_new($name, 'forks_count', $row->{forks_count})
     	);
     
     #inherit all incoming values from API
