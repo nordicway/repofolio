@@ -45,7 +45,9 @@ my $encode_entities = 1;
 
 my $repos = load();
 my @ignored_repos;
+my @whitelisted_repos;
 my @sorted_repos;
+my $whitelist_mode;
 
 # list all repos of $username
 my $p = Pithub->new;
@@ -59,13 +61,16 @@ $result->auto_pagination(1);
     		die "error from Github API: " . $row->{message};
     	}
     	
-    	#skip repo if private and we do not want private repos to show
-    	#or if it is on the ignore list.
     	if (
-    			#this is actually a "true" string we get back from Github API
-    			($row->{private} eq "true" and $include_private_repos == 0 ) or
-    			( is_ignored($row->{name}) )
-    		) {
+    	#this is actually a "true" string we get back from Github API
+    	$row->{private} eq "true" and $include_private_repos == 0
+    	) {
+    		next;
+    	} elsif ($whitelist_mode == 0 and is_ignored($row->{name})) {
+    		#skip if it is on the ignore list
+    		next;
+    	} elsif ($whitelist_mode == 1 and is_whitelisted($row->{name})!=1) {
+    		#skip if whitelist mode is on and repo is not on the white list
     		next;
     	}
     	
@@ -96,14 +101,21 @@ sub load {
 	
 	# set ignored repos explicitly because underscore variables are private
 	# in Template Toolkit
-	my $repo_skip = $read->{_}->{skip};
-	
-	delete $read->{_};
-	$repo_skip =~ s/\s//g;
-	@ignored_repos = split(',', $repo_skip);
+
+	@ignored_repos = csv_to_array($read->{_}->{skip});
 	foreach my $ignored (@ignored_repos) {
 		delete $read->{$ignored};
 	}
+
+	@whitelisted_repos = csv_to_array($read->{_}->{include});
+	if (@whitelisted_repos) {
+		# there are whitelisted repositories, so switch whitelist mode on
+		$whitelist_mode = 1;
+	} else {
+		$whitelist_mode = 0;
+	}
+
+	delete $read->{_};
 	return $read;
 }
 
@@ -153,10 +165,31 @@ sub existing_or_new {
 	}
 }
 
+# converts a list of comma seperated values to an array 
+sub csv_to_array {
+	my $csv = shift || "";
+	my @array = ();
+	$csv =~ s/\s//g;
+	@array = split(',', $csv);
+	return @array;
+}
+
 # check if a repository with this name is on the ignore list
 sub is_ignored {
 	my $name = shift;
-	return grep( /^$name$/, @ignored_repos );
+	return is_name_in_array($name, @ignored_repos);
+}
+
+# check if a repository with this name is on the whitelist
+sub is_whitelisted {
+	my $name = shift;
+	return is_name_in_array($name, @whitelisted_repos);
+}
+
+# check if a given name exists within an array
+sub is_name_in_array {
+	my ($name, @array) = @_;
+	return (grep /^$name$/, @array);
 }
 
 # sort all repos
@@ -176,7 +209,6 @@ sub sort_algo {
 	
 	my $val1 = $$repos{$a}->{$attribute};
 	my $val2 = $$repos{$b}->{$attribute};
-	
 	if (looks_like_number($val1) and looks_like_number($val2)) {
 		return $val1 <=> $val2;
 	} else {

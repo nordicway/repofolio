@@ -42,7 +42,7 @@ An output sample can be found here:
 *Any configuration explained here is done by editing `config.ini` *
 
 
-### Ignore certain repositories
+### Ignore certain repositories (Blacklist mode)
 
 The `skip` parameter takes a comma-seperated list of values. It allows you to
  skip repositories by their name. Skipped repositores will not show up in the
@@ -52,6 +52,20 @@ Let's say that you want to skip **college-project1** and **college-project2**
  so your configuration now looks like this:
  
     skip = college-project1, college-project2
+
+
+### Only include certain repositories (Whitelist mode)
+
+The `include` parameter takes a comma-seperated list of values. It allows you
+ to only include certain repositories by their name.
+
+Let's say that you only want to show **serious-project** and ignore all other
+ GitHub repositories in your account. The configuration would have to look like
+ this:
+
+    include = serious-project
+
+**Do not use `skip` and `include` at the same time!**
 
 
 ### Overwrite attributes of your GitHub repository
